@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.env
+
+
+# Docker
+*.log
+*.pid
+docker-compose.override.yml
+
+# VSCode
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints
