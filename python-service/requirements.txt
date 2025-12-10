@@ -1,0 +1,7 @@
+fastparquet>=2023.1.0
+minio==7.1.13
+pandas==2.3.3
+numpy==2.3.5
+hdfs==2.7.0
+scipy>=1.16.3
+scikit-learn==1.5.1  # ← ADD THIS (for FactorAnalysis)

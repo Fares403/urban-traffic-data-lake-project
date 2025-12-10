@@ -1,0 +1,311 @@
+minio  | MinIO Object Storage Server
+minio  | Copyright: 2015-2025 MinIO, Inc.
+hadoop  |  * Restarting OpenBSD Secure Shell server sshd
+hadoop  |    ...done.
+hadoop  | Stopping namenodes on [localhost]
+hadoop  | Stopping datanodes
+hadoop  | Stopping secondary namenodes [aef7a6eb4237]
+hadoop  | aef7a6eb4237: Warning: Permanently added 'aef7a6eb4237,172.18.0.3' (ECDSA) to the list of known hosts.
+minio   | License: GNU AGPLv3 - https://www.gnu.org/licenses/agpl-3.0.html
+minio   | Version: RELEASE.2025-09-07T16-13-09Z (go1.24.6 linux/amd64)
+minio   | 
+minio   | API: http://172.18.0.2:9000  http://127.0.0.1:9000 
+minio   | WebUI: http://172.18.0.2:9001 http://127.0.0.1:9001  
+minio   | 
+minio   | Docs: https://docs.min.io
+minio   | WARN: Detected default credentials 'minioadmin:minioadmin', we recommend that you change these values with 'MINIO_ROOT_USER' and 'MINIO_ROOT_PASSWORD' environment variables
+jupyter_notebook  | Entered start.sh with args: jupyter lab
+jupyter_notebook  | Running hooks in: /usr/local/bin/start-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/start-notebook.d
+jupyter_notebook  | Running hooks in: /usr/local/bin/before-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/before-notebook.d
+jupyter_notebook  | Executing the command: jupyter lab
+jupyter_notebook  | [I 2025-12-10 19:07:07.572 ServerApp] Package jupyterlab took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:07:07.656 ServerApp] Package jupyter_lsp took 0.0840s to import
+jupyter_notebook  | [W 2025-12-10 19:07:07.659 ServerApp] A `_jupyter_server_extension_points` function was not found in jupyter_lsp. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:07:07.696 ServerApp] Package jupyter_server_terminals took 0.0360s to import
+jupyter_notebook  | [I 2025-12-10 19:07:07.709 ServerApp] Package nbclassic took 0.0116s to import
+jupyter_notebook  | [W 2025-12-10 19:07:07.721 ServerApp] A `_jupyter_server_extension_points` function was not found in nbclassic. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:07:07.722 ServerApp] Package notebook took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:07:07.727 ServerApp] Package notebook_shim took 0.0000s to import
+jupyter_notebook  | [W 2025-12-10 19:07:07.728 ServerApp] A `_jupyter_server_extension_points` function was not found in notebook_shim. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:07:07.732 ServerApp] jupyter_lsp | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:07:07.747 ServerApp] jupyter_server_terminals | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:07:07.766 ServerApp] jupyterlab | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:07:07.774 ServerApp] nbclassic | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:07:07.781 ServerApp] notebook | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:07:07.783 ServerApp] Writing Jupyter server cookie secret to /home/jovyan/.local/share/jupyter/runtime/jupyter_cookie_secret
+jupyter_notebook  | [I 2025-12-10 19:07:09.074 ServerApp] notebook_shim | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:07:09.146 ServerApp] notebook_shim | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:07:09.148 ServerApp] jupyter_lsp | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:07:09.153 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:07:09.165 LabApp] JupyterLab extension loaded from /opt/conda/lib/python3.11/site-packages/jupyterlab
+jupyter_notebook  | [I 2025-12-10 19:07:09.166 LabApp] JupyterLab application directory is /opt/conda/share/jupyter/lab
+jupyter_notebook  | [I 2025-12-10 19:07:09.167 LabApp] Extension Manager is 'pypi'.
+jupyter_notebook  | [I 2025-12-10 19:07:09.172 ServerApp] jupyterlab | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:07:09.191 ServerApp] nbclassic | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:07:09.197 ServerApp] notebook | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:07:09.203 ServerApp] Serving notebooks from local directory: /home/jovyan
+jupyter_notebook  | [I 2025-12-10 19:07:09.203 ServerApp] Jupyter Server 2.8.0 is running at:
+jupyter_notebook  | [I 2025-12-10 19:07:09.203 ServerApp] http://8962242dd8a3:8888/lab?token=9b6bb9424d9d29dff6fd50b8e82226e11281a8d5a0f6022a
+jupyter_notebook  | [I 2025-12-10 19:07:09.203 ServerApp]     http://127.0.0.1:8888/lab?token=9b6bb9424d9d29dff6fd50b8e82226e11281a8d5a0f6022a
+jupyter_notebook  | [I 2025-12-10 19:07:09.203 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+jupyter_notebook  | [C 2025-12-10 19:07:09.214 ServerApp] 
+jupyter_notebook  |     
+python_service    | Traceback (most recent call last):
+python_service    |   File "/app/main.py", line 13, in <module>
+python_service    |     from scripts import (
+python_service    |     ...<8 lines>...
+python_service    |     )
+python_service    |   File "/app/scripts/copy_raw_to_bronze.py", line 34, in <module>
+python_service    |     for filename in os.listdir(LOCAL_BRONZE_DIR):
+python_service    |                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+python_service    | FileNotFoundError: [Errno 2] No such file or directory: '../../data/bronze'
+jupyter_notebook  |     To access the server, open this file in a browser:
+jupyter_notebook  |         file:///home/jovyan/.local/share/jupyter/runtime/jpserver-7-open.html
+jupyter_notebook  |     Or copy and paste one of these URLs:
+jupyter_notebook  |         http://8962242dd8a3:8888/lab?token=9b6bb9424d9d29dff6fd50b8e82226e11281a8d5a0f6022a
+jupyter_notebook  |         http://127.0.0.1:8888/lab?token=9b6bb9424d9d29dff6fd50b8e82226e11281a8d5a0f6022a
+jupyter_notebook  | [I 2025-12-10 19:07:11.133 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+hadoop            | Stopping nodemanagers
+hadoop            | Stopping resourcemanager
+hadoop            | Starting namenodes on [localhost]
+hadoop            | Starting datanodes
+hadoop            | Starting secondary namenodes [aef7a6eb4237]
+hadoop            | Starting resourcemanager
+hadoop            | Starting nodemanagers
+[Khadoop exited with code 0
+jupyter_notebook  | [C 2025-12-10 19:13:00.620 ServerApp] received signal 15, stopping
+jupyter_notebook  | [I 2025-12-10 19:13:00.625 ServerApp] Shutting down 6 extensions
+jupyter_notebook  | 
+jupyter_notebook  |   _   _          _      _
+jupyter_notebook  |  | | | |_ __  __| |__ _| |_ ___
+jupyter_notebook  |  | |_| | '_ \/ _` / _` |  _/ -_)
+jupyter_notebook  |   \___/| .__/\__,_\__,_|\__\___|
+jupyter_notebook  |        |_|
+jupyter_notebook  |                                                                            
+jupyter_notebook  | Read the migration plan to Notebook 7 to learn about the new features and the actions to take if you are using extensions.
+jupyter_notebook  | 
+jupyter_notebook  | https://jupyter-notebook.readthedocs.io/en/latest/migrate_to_notebook7.html
+jupyter_notebook  | 
+jupyter_notebook  | Please note that updating to Notebook 7 might break some of your extensions.
+jupyter_notebook  | 
+[Kjupyter_notebook exited with code 0
+minio             | INFO: Exiting on signal: TERMINATED
+[Kminio exited with code 0
+minio             | INFO: Formatting 1st pool, 1 set(s), 1 drives per set.
+minio             | INFO: WARNING: Host local has more than 0 drives of set. A host failure will result in data becoming unavailable.
+minio             | MinIO Object Storage Server
+minio             | Copyright: 2015-2025 MinIO, Inc.
+minio             | License: GNU AGPLv3 - https://www.gnu.org/licenses/agpl-3.0.html
+minio             | Version: RELEASE.2025-09-07T16-13-09Z (go1.24.6 linux/amd64)
+minio             | 
+minio             | API: http://172.18.0.2:9000  http://127.0.0.1:9000 
+minio             | WebUI: http://172.18.0.2:9001 http://127.0.0.1:9001  
+minio             | 
+minio             | Docs: https://docs.min.io
+minio             | WARN: Detected default credentials 'minioadmin:minioadmin', we recommend that you change these values with 'MINIO_ROOT_USER' and 'MINIO_ROOT_PASSWORD' environment variables
+jupyter_notebook  | Entered start.sh with args: jupyter lab
+jupyter_notebook  | Running hooks in: /usr/local/bin/start-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/start-notebook.d
+jupyter_notebook  | Running hooks in: /usr/local/bin/before-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/before-notebook.d
+jupyter_notebook  | Executing the command: jupyter lab
+jupyter_notebook  | [I 2025-12-10 19:50:47.016 ServerApp] Package jupyterlab took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:50:47.318 ServerApp] Package jupyter_lsp took 0.3013s to import
+jupyter_notebook  | [W 2025-12-10 19:50:47.318 ServerApp] A `_jupyter_server_extension_points` function was not found in jupyter_lsp. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:50:47.432 ServerApp] Package jupyter_server_terminals took 0.1136s to import
+jupyter_notebook  | [I 2025-12-10 19:50:47.483 ServerApp] Package nbclassic took 0.0480s to import
+jupyter_notebook  | [W 2025-12-10 19:50:47.509 ServerApp] A `_jupyter_server_extension_points` function was not found in nbclassic. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:50:47.512 ServerApp] Package notebook took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:50:47.516 ServerApp] Package notebook_shim took 0.0000s to import
+jupyter_notebook  | [W 2025-12-10 19:50:47.516 ServerApp] A `_jupyter_server_extension_points` function was not found in notebook_shim. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:50:47.519 ServerApp] jupyter_lsp | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:50:47.526 ServerApp] jupyter_server_terminals | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:50:47.536 ServerApp] jupyterlab | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:50:47.545 ServerApp] nbclassic | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:50:47.553 ServerApp] notebook | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:50:47.557 ServerApp] Writing Jupyter server cookie secret to /home/jovyan/.local/share/jupyter/runtime/jupyter_cookie_secret
+jupyter_notebook  | [I 2025-12-10 19:50:48.938 ServerApp] notebook_shim | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:50:49.020 ServerApp] notebook_shim | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:50:49.025 ServerApp] jupyter_lsp | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:50:49.029 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:50:49.044 LabApp] JupyterLab extension loaded from /opt/conda/lib/python3.11/site-packages/jupyterlab
+jupyter_notebook  | [I 2025-12-10 19:50:49.045 LabApp] JupyterLab application directory is /opt/conda/share/jupyter/lab
+jupyter_notebook  | [I 2025-12-10 19:50:49.046 LabApp] Extension Manager is 'pypi'.
+jupyter_notebook  | [I 2025-12-10 19:50:49.051 ServerApp] jupyterlab | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:50:49.072 ServerApp] nbclassic | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:50:49.084 ServerApp] notebook | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:50:49.085 ServerApp] Serving notebooks from local directory: /home/jovyan
+jupyter_notebook  | [I 2025-12-10 19:50:49.085 ServerApp] Jupyter Server 2.8.0 is running at:
+jupyter_notebook  | [I 2025-12-10 19:50:49.085 ServerApp] http://1e4fbfee5d73:8888/lab?token=ef8f8047d793a34514891f5a1c62a04f26b32b74973bc147
+jupyter_notebook  | [I 2025-12-10 19:50:49.085 ServerApp]     http://127.0.0.1:8888/lab?token=ef8f8047d793a34514891f5a1c62a04f26b32b74973bc147
+jupyter_notebook  | [I 2025-12-10 19:50:49.085 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+jupyter_notebook  | [C 2025-12-10 19:50:49.091 ServerApp] 
+jupyter_notebook  |     
+jupyter_notebook  |     To access the server, open this file in a browser:
+jupyter_notebook  |         file:///home/jovyan/.local/share/jupyter/runtime/jpserver-7-open.html
+jupyter_notebook  |     Or copy and paste one of these URLs:
+jupyter_notebook  |         http://1e4fbfee5d73:8888/lab?token=ef8f8047d793a34514891f5a1c62a04f26b32b74973bc147
+jupyter_notebook  |         http://127.0.0.1:8888/lab?token=ef8f8047d793a34514891f5a1c62a04f26b32b74973bc147
+jupyter_notebook  | [I 2025-12-10 19:50:50.887 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+[Kminio exited with code 137
+jupyter_notebook  | [C 2025-12-10 19:51:51.864 ServerApp] received signal 15, stopping
+jupyter_notebook  | 
+jupyter_notebook  |   _   _          _      _
+jupyter_notebook  |  | | | |_ __  __| |__ _| |_ ___
+jupyter_notebook  |  | |_| | '_ \/ _` / _` |  _/ -_)
+jupyter_notebook  |   \___/| .__/\__,_\__,_|\__\___|
+jupyter_notebook  |        |_|
+jupyter_notebook  |                                                                            
+jupyter_notebook  | Read the migration plan to Notebook 7 to learn about the new features and the actions to take if you are using extensions.
+jupyter_notebook  | 
+jupyter_notebook  | https://jupyter-notebook.readthedocs.io/en/latest/migrate_to_notebook7.html
+jupyter_notebook  | 
+jupyter_notebook  | Please note that updating to Notebook 7 might break some of your extensions.
+jupyter_notebook  | 
+jupyter_notebook  | [I 2025-12-10 19:51:51.866 ServerApp] Shutting down 6 extensions
+[Kjupyter_notebook exited with code 0
+minio             | MinIO Object Storage Server
+minio             | Copyright: 2015-2025 MinIO, Inc.
+minio             | License: GNU AGPLv3 - https://www.gnu.org/licenses/agpl-3.0.html
+minio             | Version: RELEASE.2025-09-07T16-13-09Z (go1.24.6 linux/amd64)
+minio             | 
+minio             | API: http://172.18.0.2:9000  http://127.0.0.1:9000 
+minio             | WebUI: http://172.18.0.2:9001 http://127.0.0.1:9001  
+minio             | 
+minio             | Docs: https://docs.min.io
+minio             | WARN: Detected default credentials 'minioadmin:minioadmin', we recommend that you change these values with 'MINIO_ROOT_USER' and 'MINIO_ROOT_PASSWORD' environment variables
+jupyter_notebook  | Entered start.sh with args: jupyter lab
+jupyter_notebook  | Running hooks in: /usr/local/bin/start-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/start-notebook.d
+jupyter_notebook  | Running hooks in: /usr/local/bin/before-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/before-notebook.d
+jupyter_notebook  | Executing the command: jupyter lab
+jupyter_notebook  | [I 2025-12-10 19:52:44.624 ServerApp] Package jupyterlab took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:52:44.666 ServerApp] Package jupyter_lsp took 0.0403s to import
+jupyter_notebook  | [W 2025-12-10 19:52:44.666 ServerApp] A `_jupyter_server_extension_points` function was not found in jupyter_lsp. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:52:44.674 ServerApp] Package jupyter_server_terminals took 0.0079s to import
+jupyter_notebook  | [I 2025-12-10 19:52:44.681 ServerApp] Package nbclassic took 0.0057s to import
+jupyter_notebook  | [W 2025-12-10 19:52:44.685 ServerApp] A `_jupyter_server_extension_points` function was not found in nbclassic. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:52:44.685 ServerApp] Package notebook took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:52:44.688 ServerApp] Package notebook_shim took 0.0000s to import
+jupyter_notebook  | [W 2025-12-10 19:52:44.688 ServerApp] A `_jupyter_server_extension_points` function was not found in notebook_shim. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:52:44.689 ServerApp] jupyter_lsp | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:52:44.698 ServerApp] jupyter_server_terminals | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:52:44.705 ServerApp] jupyterlab | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:52:44.714 ServerApp] nbclassic | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:52:44.719 ServerApp] notebook | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:52:44.721 ServerApp] Writing Jupyter server cookie secret to /home/jovyan/.local/share/jupyter/runtime/jupyter_cookie_secret
+jupyter_notebook  | [I 2025-12-10 19:52:45.207 ServerApp] notebook_shim | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:52:45.253 ServerApp] notebook_shim | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:52:45.257 ServerApp] jupyter_lsp | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:52:45.258 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:52:45.263 LabApp] JupyterLab extension loaded from /opt/conda/lib/python3.11/site-packages/jupyterlab
+jupyter_notebook  | [I 2025-12-10 19:52:45.264 LabApp] JupyterLab application directory is /opt/conda/share/jupyter/lab
+jupyter_notebook  | [I 2025-12-10 19:52:45.265 LabApp] Extension Manager is 'pypi'.
+jupyter_notebook  | [I 2025-12-10 19:52:45.271 ServerApp] jupyterlab | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:52:45.279 ServerApp] nbclassic | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:52:45.284 ServerApp] notebook | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:52:45.285 ServerApp] Serving notebooks from local directory: /home/jovyan
+jupyter_notebook  | [I 2025-12-10 19:52:45.286 ServerApp] Jupyter Server 2.8.0 is running at:
+jupyter_notebook  | [I 2025-12-10 19:52:45.286 ServerApp] http://340c59a436c9:8888/lab?token=c661f82247daed6fcc729097db328926f6b4f3aa6cbe3ed0
+jupyter_notebook  | [I 2025-12-10 19:52:45.286 ServerApp]     http://127.0.0.1:8888/lab?token=c661f82247daed6fcc729097db328926f6b4f3aa6cbe3ed0
+jupyter_notebook  | [I 2025-12-10 19:52:45.286 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+jupyter_notebook  | [C 2025-12-10 19:52:45.291 ServerApp] 
+jupyter_notebook  |     
+jupyter_notebook  |     To access the server, open this file in a browser:
+jupyter_notebook  |         file:///home/jovyan/.local/share/jupyter/runtime/jpserver-7-open.html
+jupyter_notebook  |     Or copy and paste one of these URLs:
+jupyter_notebook  |         http://340c59a436c9:8888/lab?token=c661f82247daed6fcc729097db328926f6b4f3aa6cbe3ed0
+jupyter_notebook  |         http://127.0.0.1:8888/lab?token=c661f82247daed6fcc729097db328926f6b4f3aa6cbe3ed0
+jupyter_notebook  | [I 2025-12-10 19:52:46.459 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+[Kminio exited with code 137
+jupyter_notebook  | [C 2025-12-10 19:52:49.058 ServerApp] received signal 15, stopping
+jupyter_notebook  | [I 2025-12-10 19:52:49.059 ServerApp] Shutting down 6 extensions
+jupyter_notebook  | 
+jupyter_notebook  |   _   _          _      _
+jupyter_notebook  |  | | | |_ __  __| |__ _| |_ ___
+jupyter_notebook  |  | |_| | '_ \/ _` / _` |  _/ -_)
+jupyter_notebook  |   \___/| .__/\__,_\__,_|\__\___|
+jupyter_notebook  |        |_|
+jupyter_notebook  |                                                                            
+jupyter_notebook  | Read the migration plan to Notebook 7 to learn about the new features and the actions to take if you are using extensions.
+jupyter_notebook  | 
+jupyter_notebook  | https://jupyter-notebook.readthedocs.io/en/latest/migrate_to_notebook7.html
+jupyter_notebook  | 
+jupyter_notebook  | Please note that updating to Notebook 7 might break some of your extensions.
+jupyter_notebook  | 
+[Kjupyter_notebook exited with code 0
+minio             | MinIO Object Storage Server
+minio             | Copyright: 2015-2025 MinIO, Inc.
+minio             | License: GNU AGPLv3 - https://www.gnu.org/licenses/agpl-3.0.html
+minio             | Version: RELEASE.2025-09-07T16-13-09Z (go1.24.6 linux/amd64)
+minio             | 
+minio             | API: http://172.18.0.2:9000  http://127.0.0.1:9000 
+minio             | WebUI: http://172.18.0.2:9001 http://127.0.0.1:9001  
+minio             | 
+minio             | Docs: https://docs.min.io
+minio             | WARN: Detected default credentials 'minioadmin:minioadmin', we recommend that you change these values with 'MINIO_ROOT_USER' and 'MINIO_ROOT_PASSWORD' environment variables
+jupyter_notebook  | Entered start.sh with args: jupyter lab
+jupyter_notebook  | Running hooks in: /usr/local/bin/start-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/start-notebook.d
+jupyter_notebook  | Running hooks in: /usr/local/bin/before-notebook.d as uid: 1000 gid: 100
+jupyter_notebook  | Done running hooks in: /usr/local/bin/before-notebook.d
+jupyter_notebook  | Executing the command: jupyter lab
+jupyter_notebook  | [I 2025-12-10 19:53:27.706 ServerApp] Package jupyterlab took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:53:27.725 ServerApp] Package jupyter_lsp took 0.0171s to import
+jupyter_notebook  | [W 2025-12-10 19:53:27.725 ServerApp] A `_jupyter_server_extension_points` function was not found in jupyter_lsp. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:53:27.732 ServerApp] Package jupyter_server_terminals took 0.0068s to import
+jupyter_notebook  | [I 2025-12-10 19:53:27.736 ServerApp] Package nbclassic took 0.0033s to import
+jupyter_notebook  | [W 2025-12-10 19:53:27.740 ServerApp] A `_jupyter_server_extension_points` function was not found in nbclassic. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:53:27.742 ServerApp] Package notebook took 0.0000s to import
+jupyter_notebook  | [I 2025-12-10 19:53:27.746 ServerApp] Package notebook_shim took 0.0000s to import
+jupyter_notebook  | [W 2025-12-10 19:53:27.746 ServerApp] A `_jupyter_server_extension_points` function was not found in notebook_shim. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+jupyter_notebook  | [I 2025-12-10 19:53:27.747 ServerApp] jupyter_lsp | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:53:27.757 ServerApp] jupyter_server_terminals | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:53:27.764 ServerApp] jupyterlab | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:53:27.769 ServerApp] nbclassic | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:53:27.776 ServerApp] notebook | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:53:27.778 ServerApp] Writing Jupyter server cookie secret to /home/jovyan/.local/share/jupyter/runtime/jupyter_cookie_secret
+jupyter_notebook  | [I 2025-12-10 19:53:28.109 ServerApp] notebook_shim | extension was successfully linked.
+jupyter_notebook  | [I 2025-12-10 19:53:28.133 ServerApp] notebook_shim | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:53:28.136 ServerApp] jupyter_lsp | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:53:28.143 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:53:28.146 LabApp] JupyterLab extension loaded from /opt/conda/lib/python3.11/site-packages/jupyterlab
+jupyter_notebook  | [I 2025-12-10 19:53:28.146 LabApp] JupyterLab application directory is /opt/conda/share/jupyter/lab
+jupyter_notebook  | [I 2025-12-10 19:53:28.147 LabApp] Extension Manager is 'pypi'.
+jupyter_notebook  | [I 2025-12-10 19:53:28.151 ServerApp] jupyterlab | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:53:28.159 ServerApp] nbclassic | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:53:28.161 ServerApp] notebook | extension was successfully loaded.
+jupyter_notebook  | [I 2025-12-10 19:53:28.162 ServerApp] Serving notebooks from local directory: /home/jovyan
+jupyter_notebook  | [I 2025-12-10 19:53:28.162 ServerApp] Jupyter Server 2.8.0 is running at:
+jupyter_notebook  | [I 2025-12-10 19:53:28.162 ServerApp] http://ec7abf5a47b5:8888/lab?token=51dd9680f75113ee686cb37a618e08cb1985f6515f7f3a51
+jupyter_notebook  | [I 2025-12-10 19:53:28.162 ServerApp]     http://127.0.0.1:8888/lab?token=51dd9680f75113ee686cb37a618e08cb1985f6515f7f3a51
+jupyter_notebook  | [I 2025-12-10 19:53:28.162 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+jupyter_notebook  | [C 2025-12-10 19:53:28.166 ServerApp] 
+jupyter_notebook  |     
+jupyter_notebook  |     To access the server, open this file in a browser:
+jupyter_notebook  |         file:///home/jovyan/.local/share/jupyter/runtime/jpserver-7-open.html
+jupyter_notebook  |     Or copy and paste one of these URLs:
+jupyter_notebook  |         http://ec7abf5a47b5:8888/lab?token=51dd9680f75113ee686cb37a618e08cb1985f6515f7f3a51
+jupyter_notebook  |         http://127.0.0.1:8888/lab?token=51dd9680f75113ee686cb37a618e08cb1985f6515f7f3a51
+jupyter_notebook  | [I 2025-12-10 19:53:28.913 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+jupyter_notebook  | [C 2025-12-10 19:55:51.313 ServerApp] received signal 15, stopping
+jupyter_notebook  | [I 2025-12-10 19:55:51.315 ServerApp] Shutting down 6 extensions
+jupyter_notebook  | 
+jupyter_notebook  |   _   _          _      _
+jupyter_notebook  |  | | | |_ __  __| |__ _| |_ ___
+jupyter_notebook  |  | |_| | '_ \/ _` / _` |  _/ -_)
+jupyter_notebook  |   \___/| .__/\__,_\__,_|\__\___|
+jupyter_notebook  |        |_|
+jupyter_notebook  |                                                                            
+jupyter_notebook  | Read the migration plan to Notebook 7 to learn about the new features and the actions to take if you are using extensions.
+jupyter_notebook  | 
+jupyter_notebook  | https://jupyter-notebook.readthedocs.io/en/latest/migrate_to_notebook7.html
+jupyter_notebook  | 
+jupyter_notebook  | Please note that updating to Notebook 7 might break some of your extensions.
+jupyter_notebook  | 
+[Kjupyter_notebook exited with code 0
+minio             | INFO: Exiting on signal: TERMINATED
+[Kminio exited with code 0
