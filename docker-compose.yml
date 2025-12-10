@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+
+  # -----------------------------
+  # MinIO (Object Storage)
+  # -----------------------------
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"   # MinIO API
+      - "9001:9001"   # MinIO Console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - ./data/minio:/data    # persistent storage
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  # -----------------------------
+  # Hadoop Pseudo-Distributed
+  # -----------------------------
+  hadoop:
+    image: asami76/hadoop-pseudo:v1.0
+    container_name: hadoop
+    environment:
+      HDFS_NAMENODE_USER: root
+      HDFS_DATANODE_USER: root
+    ports:
+      - "9870:9870"   # HDFS Web UI
+      - "9002:9002"   # HDFS client API
+    command: bash -c "service ssh start; hdfs namenode -format; start-dfs.sh; tail -f /dev/null"
+    restart: unless-stopped
+
+  # -----------------------------
+  # Python Service (ETL & Pipeline)
+  # -----------------------------
+  python-service:
+    image: python:latest
+    container_name: python-service
+    depends_on:
+      - minio
+      - hadoop
+    volumes:
+      - ./python-service:/app    # السكريبتات
+      - ./data:/data            # فولدر البيانات: bronze/silver/gold
+    working_dir: /app
+    command: bash -c "while true; do sleep 30; done" # placeholder لتشغيل السكريبتات
+    environment:
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      HDFS_URL: hdfs://hadoop:9002
+    ports:
+      - "8888:8888"   # optional port if needed for internal services
+    restart: unless-stopped
+
+  # -----------------------------
+  # Jupyter Notebook
+  # -----------------------------
+  jupyter:
+    image: jupyter/base-notebook:latest
+    container_name: jupyter
+    depends_on:
+      - python-service
+    volumes:
+      - ./notebooks:/home/jovyan/work   # فولدر notebooks على اللوكال
+      - ./data:/home/jovyan/data       # فولدر البيانات للعرض/debug
+    ports:
+      - "8889:8888"  # متصفح Jupyter Lab
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+    command: start-notebook.sh --NotebookApp.token=''
+    restart: unless-stopped
