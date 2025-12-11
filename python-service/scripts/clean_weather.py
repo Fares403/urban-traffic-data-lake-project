@@ -1,8 +1,3 @@
-"""
-clean_weather.py - النسخة المُصححة
-
-إصلاح مشكلة pandas datetime timezone mixing
-"""
 
 import pandas as pd
 import numpy as np
@@ -50,13 +45,11 @@ def clean_weather(client):
         df = df.drop_duplicates(subset="weather_id")
         print(f"[✔] Removed {initial_rows - len(df)} duplicates")
         
-        # 2. Standardize date_time - ✅ الإصلاح الرئيسي هنا
         print("[i] Standardizing date_time column...")
         df['date_time'] = pd.to_datetime(df['date_time'], errors='coerce', dayfirst=True, utc=True)
         before_date_clean = len(df)
         df = df.dropna(subset=['date_time'])
         
-        # ✅ إزالة timezone وتوحيد النوع
         df['date_time'] = df['date_time'].dt.tz_convert(None)
         print(f"[✔] Removed {before_date_clean - len(df)} invalid dates")
         

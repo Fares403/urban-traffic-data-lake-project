@@ -21,7 +21,7 @@ def get_minio_client():
 
 def get_hdfs_client():
     """Get HDFS client using Docker Compose environment variables"""
-    HDFS_NAMENODE = os.getenv("HDFS_NAMENODE", "hdfs://namenode:9000")  # ✅ FIXED
+    HDFS_NAMENODE = os.getenv("HDFS_NAMENODE", "hdfs://namenode:9000") 
     HDFS_USER = os.getenv("HDFS_USER", "hadoop")
     return InsecureClient(HDFS_NAMENODE, user=HDFS_USER)
 
@@ -47,7 +47,7 @@ def copy_to_hdfs():
     
     # HDFS client with retry (Hadoop is slow)
     hdfs_client = get_hdfs_client()
-    for _ in range(20):  # ✅ Increased retries for Hadoop
+    for _ in range(20): 
         try:
             hdfs_client.status("/", strict=False)
             break
@@ -91,7 +91,7 @@ def copy_to_hdfs():
             data = minio_client.get_object(SILVER_BUCKET, obj_name)
             df_bytes = BytesIO(data.read())
             hdfs_path = f"{HDFS_DEST_DIR}/{obj_name}"
-            with hdfs_client.write(hdfs_path, overwrite=True) as writer:  # ✅ Better upload
+            with hdfs_client.write(hdfs_path, overwrite=True) as writer:
                 writer.write(df_bytes.getvalue())
             print(f"[✔] Copied {obj_name} → HDFS {hdfs_path}")
             success_count += 1

@@ -31,7 +31,6 @@ def get_minio_client():
 
 def get_hdfs_webhdfs_url():
     """Get WebHDFS base URL from environment (NameNode HTTP port 9870)"""
-    # مثال: http://namenode:9870
     return os.getenv("HDFS_WEB_UI", "http://namenode:9870")
 
 
@@ -78,12 +77,12 @@ def copy_to_hdfs():
     max_retries = 30  # 30 * 5s = 150s = 2.5 minutes
     for attempt in range(max_retries):
         if is_hdfs_ready(webhdfs_url):
-            print("[✔] HDFS NameNode WebHDFS is ready")
+            print(" HDFS NameNode WebHDFS is ready")
             break
-        print(f"[i] Waiting for HDFS... ({attempt + 1}/{max_retries})")
+        print(f"[i] Waiting for HDFS........ ({attempt + 1}/{max_retries})")
         time.sleep(5)
     else:
-        print("[✖] HDFS not available via WebHDFS after retries")
+        print("!!!!! HDFS not available via WebHDFS after retries")
         return False
 
     # Create HDFS client on WebHDFS URL
@@ -114,7 +113,7 @@ def copy_to_hdfs():
             if obj.object_name.endswith(".parquet"):
                 parquet_files.append(obj.object_name)
     except S3Error as e:
-        print(f"[✖] Error listing Silver bucket: {e}")
+        print(f"✖ Error listing Silver bucket: {e}")
         return False
 
     if not parquet_files:
@@ -134,12 +133,12 @@ def copy_to_hdfs():
             with hdfs_client.write(hdfs_path, overwrite=True) as writer:
                 writer.write(data_bytes)
 
-            print(f"[✔] Copied {obj_name} → HDFS {hdfs_path}")
+            print(f"!!!!! Copied {obj_name} → HDFS {hdfs_path}")
             success_count += 1
         except Exception as e:
-            print(f"[✖] Error copying {obj_name} to HDFS: {e}")
+            print(f"✖ Error copying {obj_name} to HDFS: {e}")
 
-    print(f"[✔] HDFS copy completed: {success_count}/{len(parquet_files)} files successful")
+    print(f"!!!!! HDFS copy completed: {success_count}/{len(parquet_files)} files successful")
     return success_count == len(parquet_files)
 
 

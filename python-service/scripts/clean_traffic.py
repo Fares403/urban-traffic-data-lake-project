@@ -82,7 +82,7 @@ def clean_traffic(client):
         before_date_clean = len(df)
         df = df.dropna(subset=["date_time"])
         
-        # ✅ Remove timezone and unify dtype
+        #  Remove timezone and unify dtype
         df["date_time"] = df['date_time'].dt.tz_convert(None)
         print(f"[✔] Removed {before_date_clean - len(df)} invalid dates")
         

@@ -39,77 +39,78 @@ def run_pipeline():
 
     try:
         # Step 1: Buckets are created by minio-init
-        print("\n[1/10] ✅ MinIO buckets ready (minio-init service)")
+        print("\n[1/10]  MinIO buckets ready (minio-init service)")
         time.sleep(1)
 
         # Step 2: Generate synthetic weather data
-        print("\n[2/10] 🌤️ Generating weather data...")
+        print("\n[2/10]  Generating weather data...")
         generate_weather_data()
         time.sleep(1)
 
         # Step 3: Generate synthetic traffic data
-        print("[3/10] 🚗 Generating traffic data...")
+        print("[3/10]  Generating traffic data...")
         generate_traffic_data()
         time.sleep(1)
 
         # Step 4: Copy raw data to MinIO Bronze
-        print("\n[4/10] ☁️  Copying raw data to MinIO Bronze bucket...")
+        print("\n[4/10]   Copying raw data to MinIO Bronze bucket...")
         if not copy_raw_to_bronze():
             print("[✖] Bronze copy failed, stopping pipeline")
             return False
         time.sleep(2)
 
         # Step 5: Clean traffic → Silver
-        print("\n[5/10] 🧹 Cleaning traffic data → Silver layer...")
+        print("\n[5/10]  Cleaning traffic data → Silver layer...")
         client = get_minio_client()
         if not clean_traffic(client):
             print("[✖] Traffic cleaning failed")
             return False
 
         # Step 6: Clean weather → Silver
-        print("[6/10] 🧹 Cleaning weather data → Silver layer...")
+        print("[6/10]  Cleaning weather data → Silver layer...")
         if not clean_weather(client):
             print("[✖] Weather cleaning failed")
             return False
         time.sleep(2)
 
         # Step 7: Merge cleaned data
-        print("\n[7/10] 🔗 Merging traffic + weather data...")
+        print("\n[7/10]  Merging traffic + weather data...")
         if not merge_datasets(client):
             print("[✖] Merge failed")
             return False
         time.sleep(2)
 
         # Step 8: Gold layer analytics – Factor Analysis
-        print("\n[8/10] 📊 Factor Analysis (Gold layer)...")
+        print("\n[8/10]  Factor Analysis (Gold layer)...")
         if not factor_analysis(client):
             print("[✖] Factor analysis failed")
             return False
 
         # Step 9: Gold layer analytics – Monte Carlo
-        print("[9/10] 📈 Monte Carlo simulation (Gold layer)...")
+        print("[9/10]  Monte Carlo simulation (Gold layer)...")
         if not monte_carlo_simulation(client):
             print("[✖] Monte Carlo simulation failed")
             return False
         time.sleep(1)
 
         # Step 10: Copy Silver layer to HDFS
-        print("\n[10/10] 🗄️  Copying Silver layer to HDFS...")
-        # copy_to_hdfs() يستخدم MinIO داخليًا، لا يحتاج client
+        print("\n[10/10]   Copying Silver layer to HDFS...")
+
         if not copy_to_hdfs():
-            print("[⚠️] HDFS copy warning (non-blocking)")
+            print("[!!!!!!] HDFS copy warning (non-blocking)")
 
         print("\n" + "=" * 60)
-        print("✅ ETL Pipeline COMPLETED SUCCESSFULLY!")
-        print("📁 Data Lake Locations:")
-        print("   🥉 Bronze:   ./data/bronze/*.csv + MinIO bronze/")
-        print("   🥈 Silver:   ./data/silver/*.parquet + MinIO silver/")
-        print("   🥇 Gold:     ./data/gold/*.parquet + MinIO gold/")
-        print("   🗄️  HDFS:    /silver/*.parquet")
-        print("\n🌐 Access:")
+        print(" ETL Pipeline COMPLETED SUCCESSFULLY!")
+        print(" Data Lake Locations:")
+        print("    Bronze:   ./data/bronze/*.csv + MinIO bronze/")
+        print("    Silver:   ./data/silver/*.parquet + MinIO silver/")
+        print("    Gold:     ./data/gold/*.parquet + MinIO gold/")
+        print("    HDFS:    /silver/*.parquet")
+        print("\n Access:")
         print("   MinIO:  http://localhost:9001  (minioadmin / minioadmin)")
         print("   HDFS:   http://localhost:9870")
         print("   Jupyter: http://localhost:8888")
+        print("Project Created By Fares Ashraf")
         return True
 
     except KeyboardInterrupt:

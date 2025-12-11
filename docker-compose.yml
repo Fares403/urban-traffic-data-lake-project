@@ -1,7 +1,7 @@
 # ============================================================================
 # Urban Traffic Data Lake Platform
 # Complete Medallion Architecture: Bronze → Silver → Gold
-# HDFS + MinIO + ETL Pipeline + JupyterLab
+# HDFS + MinIO + ETL Pipeline + Lightweight JupyterLab
 # Production Ready | Auto-Setup | Manual Token from Logs
 # ============================================================================
 
@@ -25,7 +25,7 @@ services:
       # HDFS Core Settings
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
       - HDFS_CONF_dfs_replication=1
-      - HDFS_CONF_dfs_permissions_enabled=false  # ✅ Development mode
+      - HDFS_CONF_dfs_permissions_enabled=false  # Development mode
       # Storage Paths
       - HDFS_CONF_dfs_namenode_name_dir=file:///hadoop/dfs/name
       - HDFS_CONF_dfs_datanode_data_dir=file:///hadoop/dfs/data
@@ -99,11 +99,11 @@ services:
         condition: service_healthy
     entrypoint: >
       /bin/sh -c "
-        echo '🔄 Initializing MinIO buckets...' &&
-        until /usr/bin/mc alias set minio http://minio:9002 minioadmin minioadmin; do sleep 1; echo '⏳ Waiting for MinIO...'; done &&
+        echo 'Initializing MinIO buckets...' &&
+        until /usr/bin/mc alias set minio http://minio:9002 minioadmin minioadmin; do sleep 1; echo 'Waiting for MinIO...'; done &&
         /usr/bin/mc mb minio/bronze minio/silver minio/gold || true &&
         /usr/bin/mc policy set public minio/bronze minio/silver minio/gold || true &&
-        echo '✅ MinIO Buckets ready: bronze, silver, gold (Public Read)'
+        echo 'MinIO Buckets ready: bronze, silver, gold (Public Read)'
       "
     networks:
       - data-lake-net
@@ -118,7 +118,7 @@ services:
     container_name: urban-traffic-etl-pipeline
     volumes:
       - ./python-service:/app:delegated
-      - ./data:/app/data:delegated  # ✅ Unified Data Lake
+      - ./data:/app/data:delegated  # Unified Data Lake
     environment:
       # MinIO S3
       - MINIO_URL=http://minio:9002
@@ -144,27 +144,43 @@ services:
       - pipeline
 
   # ==========================================================================
-  # JUPYTERLAB - Data Science & ML Environment (Standard Token)
+  # PERFECT JUPYTER - All Essential Libraries (~800MB)
   # ==========================================================================
   jupyter:
-    image: jupyter/datascience-notebook:python-3.11.6
+    image: jupyter/minimal-notebook:python-3.11
     container_name: urban-traffic-jupyterlab
     ports:
       - "8888:8888"
     volumes:
-      - ./notebooks:/home/jovyan/work:cached      #  Live notebook sync
-      - ./data:/home/jovyan/data:delegated        #  Data Lake access
+      - ./notebooks:/home/jovyan/work:cached
+      - ./data:/home/jovyan/data:delegated
     environment:
       JUPYTER_ENABLE_LAB: 'yes'
-      JUPYTER_ALLOW_NO_BROWSER: 'true'
-      GRANT_SUDO: '1'
-      NB_UID: 1000
-      NB_GID: 1000
+      GRANT_SUDO: 'yes'
     networks:
       - data-lake-net
     depends_on:
       - minio
       - namenode
+    command: |
+      bash -c "
+        pip install --no-cache-dir 
+          pandas==2.2.2
+          numpy==2.0.1
+          matplotlib==3.9.2
+          seaborn==0.13.2
+          pyarrow==15.0.0
+          fastparquet==2024.9.17
+          minio==7.2.7
+          hdfs==3.3.0 &&
+        exec jupyter lab 
+          --ip=0.0.0.0 
+          --port=8888 
+          --no-browser 
+          --NotebookApp.token='' 
+          --ServerApp.allow_remote_access=true
+          --ServerApp.root_dir=/home/jovyan/work
+      "
     restart: unless-stopped
 
   # ==========================================================================
@@ -179,7 +195,7 @@ services:
       - data-lake-net
     entrypoint: >
       sh -c "
-        echo ' Urban Traffic Data Lake Status Report' &&
+        echo 'Urban Traffic Data Lake Status Report' &&
         echo '=======================================' &&
         echo 'Bronze Layer: $(find /data/bronze -type f | wc -l) files' &&
         echo 'Silver Layer: $(find /data/silver -type f | wc -l) files' &&
