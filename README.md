@@ -396,7 +396,3 @@ Data under `data/` and Docker volumes will persist until explicitly removed.
 - Jupyter dependencies: adjust the Jupyter image or the install commands in `docker-compose.yml` to add or remove Python libraries.
 - ETL logic: extend or modify scripts in `python-service/scripts/` and update `main.py` accordingly.
 - Scaling: tune HDFS replication, add more data nodes, or introduce additional services (e.g., Spark) on the same Docker network.
-
-## License
-
-Specify your chosen license here, for example:
