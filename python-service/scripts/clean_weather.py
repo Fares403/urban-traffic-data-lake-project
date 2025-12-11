@@ -1,24 +1,7 @@
 """
-clean_weather.py
+clean_weather.py - النسخة المُصححة
 
-This script reads raw weather data from MinIO Bronze bucket, cleans it,
-saves the cleaned data locally, and uploads it to MinIO Silver bucket.
-
-Cleaning Steps:
-1. Remove duplicate rows based on 'weather_id'.
-2. Handle missing values:
-   - Fill 'city' and 'season' with mode.
-   - Fill numeric columns with median or drop if necessary.
-3. Standardize 'date_time' column:
-   - Convert to datetime format, remove invalid entries.
-4. Handle outliers for numeric columns using IQR method.
-5. Standardize categorical columns to expected values.
-
-Local Output:
-- data/silver/weather_clean.parquet
-
-MinIO Output:
-- Silver bucket: weather_clean.parquet
+إصلاح مشكلة pandas datetime timezone mixing
 """
 
 import pandas as pd
@@ -46,7 +29,7 @@ def get_minio_client():
 
 def clean_weather(client):
     # --- Config ---
-    LOCAL_SILVER_PATH = "/app/data/silver/weather_clean.parquet"  # Fixed path
+    LOCAL_SILVER_PATH = "/app/data/silver/weather_clean.parquet"
     BRONZE_BUCKET = "bronze"
     SILVER_BUCKET = "silver"
     FILE_NAME = "weather_raw.csv"
@@ -67,19 +50,25 @@ def clean_weather(client):
         df = df.drop_duplicates(subset="weather_id")
         print(f"[✔] Removed {initial_rows - len(df)} duplicates")
         
-        # 2. Standardize date_time
-        df['date_time'] = pd.to_datetime(df['date_time'], errors='coerce')
+        # 2. Standardize date_time - ✅ الإصلاح الرئيسي هنا
+        print("[i] Standardizing date_time column...")
+        df['date_time'] = pd.to_datetime(df['date_time'], errors='coerce', dayfirst=True, utc=True)
         before_date_clean = len(df)
         df = df.dropna(subset=['date_time'])
+        
+        # ✅ إزالة timezone وتوحيد النوع
+        df['date_time'] = df['date_time'].dt.tz_convert(None)
         print(f"[✔] Removed {before_date_clean - len(df)} invalid dates")
         
         # 3. Fill missing categorical values
         categorical_cols = ['city', 'season', 'weather_condition']
         for col in categorical_cols:
-            if col in df.columns and not df[col].mode().empty:
-                df[col] = df[col].fillna(df[col].mode().iloc[0])
-            else:
-                df[col] = df[col].fillna("Unknown")
+            if col in df.columns:
+                mode_val = df[col].mode()
+                if not mode_val.empty:
+                    df[col] = df[col].fillna(mode_val.iloc[0])
+                else:
+                    df[col] = df[col].fillna("Unknown")
         
         # 4. Handle numeric columns
         numeric_cols = ['temperature_c', 'humidity', 'rain_mm', 'wind_speed_kmh', 'visibility_m']
@@ -88,23 +77,31 @@ def clean_weather(client):
                 # Convert non-numeric to NaN
                 df[col] = pd.to_numeric(df[col], errors='coerce')
                 
+                # Remove rows with too many NaN in numeric columns
+                nan_count = df[col].isna().sum()
+                if nan_count / len(df) > 0.5:  # More than 50% NaN
+                    df = df.dropna(subset=[col])
+                
                 # Handle outliers using IQR
                 Q1 = df[col].quantile(0.25)
                 Q3 = df[col].quantile(0.75)
                 IQR = Q3 - Q1
                 lower = Q1 - 1.5 * IQR
                 upper = Q3 + 1.5 * IQR
-                before_outlier = len(df)
+                outlier_count = ((df[col] < lower) | (df[col] > upper)).sum()
                 df[col] = df[col].clip(lower=lower, upper=upper)
+                print(f"[✔] Removed {outlier_count} outliers from {col}")
                 
                 # Fill remaining NaN with median
-                df[col] = df[col].fillna(df[col].median())
+                median_val = df[col].median()
+                if pd.notna(median_val):
+                    df[col] = df[col].fillna(median_val)
         
         # --- Save locally ---
         silver_path = os.path.dirname(LOCAL_SILVER_PATH)
         os.makedirs(silver_path, exist_ok=True)
         df.to_parquet(LOCAL_SILVER_PATH, index=False, engine='fastparquet')
-        print(f"[✔] Cleaned weather data saved locally → {LOCAL_SILVER_PATH} ({len(df)} rows)")
+        print(f"[✔] Cleaned weather dataset saved locally → {LOCAL_SILVER_PATH} ({len(df)} rows)")
         
         # --- Upload to MinIO Silver ---
         with open(LOCAL_SILVER_PATH, "rb") as f:
@@ -114,7 +111,7 @@ def clean_weather(client):
                 f,
                 length=os.path.getsize(LOCAL_SILVER_PATH)
             )
-        print(f"[✔] Cleaned data uploaded to {SILVER_BUCKET}/{CLEANED_FILE_NAME}")
+        print(f"[✔] Cleaned weather dataset uploaded to {SILVER_BUCKET}/{CLEANED_FILE_NAME}")
         
         return True
         
@@ -122,7 +119,10 @@ def clean_weather(client):
         print(f"[✖] MinIO error: {e}")
         return False
     except Exception as e:
-        print(f"[✖] Unexpected error: {e}")
+        print(f"[✖] Unexpected error: {str(e)}")
+        print(f"[i] Error type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
         return False
 
 if __name__ == "__main__":

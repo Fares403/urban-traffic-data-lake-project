@@ -1,118 +1,209 @@
+# ============================================================================
+# Urban Traffic Data Lake Platform
+# Complete Medallion Architecture: Bronze → Silver → Gold
+# HDFS + MinIO + ETL Pipeline + JupyterLab
+# Production Ready | Auto-Setup | Manual Token from Logs
+# ============================================================================
+
 services:
-  # ---------------- MinIO Object Storage ----------------
+  # ==========================================================================
+  # HDFS CLUSTER - Distributed Storage (NameNode + DataNode)
+  # ==========================================================================
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: urban-traffic-namenode
+    hostname: namenode
+    ports:
+      - "9870:9870"  # HDFS Web UI Dashboard
+      - "9000:9000"  # HDFS RPC Endpoint
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+      - hadoop_dfs_data:/hadoop/dfs/data
+    environment:
+      # Cluster Configuration
+      - CLUSTER_NAME=urban-traffic-cluster
+      # HDFS Core Settings
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=1
+      - HDFS_CONF_dfs_permissions_enabled=false  # ✅ Development mode
+      # Storage Paths
+      - HDFS_CONF_dfs_namenode_name_dir=file:///hadoop/dfs/name
+      - HDFS_CONF_dfs_datanode_data_dir=file:///hadoop/dfs/data
+      # Proxy User (for python-service access)
+      - CORE_CONF_hadoop_proxyuser_hadoop_hosts=*
+      - CORE_CONF_hadoop_proxyuser_hadoop_groups=*
+    env_file:
+      - ./hadoop.env
+    networks:
+      - data-lake-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9870 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    restart: unless-stopped
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: urban-traffic-datanode
+    volumes:
+      - hadoop_dfs_data:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    env_file:
+      - ./hadoop.env
+    networks:
+      - data-lake-net
+    depends_on:
+      namenode:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://namenode:9870 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ==========================================================================
+  # MINIO - S3 Object Storage (Bronze/Silver/Gold Buckets)
+  # ==========================================================================
   minio:
     image: minio/minio:latest
-    container_name: minio
+    container_name: urban-traffic-minio
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9001:9001"  # MinIO Console UI
+      - "9002:9002"  # S3 API Endpoint
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
-    command: server /data --console-address ":9001"
+    command: server /data --console-address ":9001" --address ":9002"
     volumes:
-      - ./data:/data
+      - minio_data:/data
     networks:
-      - etl-net
+      - data-lake-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://localhost:9002/minio/health/live"]
       interval: 30s
       timeout: 20s
-      retries: 5
+      retries: 3
+      start_period: 40s
     restart: unless-stopped
 
-  # ---------------- STABLE HADOOP NameNode ----------------
-  hadoop:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    container_name: hadoop
-    hostname: namenode
-    ports:
-      - "9870:9870"  # NameNode UI
-      - "9000:9000"  # HDFS port
-    environment:
-      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
-      - HDFS_CONF_dfs_replication=1
-      - HDFS_CONF_dfs_namenode_name_dir=file:///hadoop/dfs/name
-      - HDFS_CONF_dfs_datanode_data_dir=file:///hadoop/dfs/data
-    volumes:
-      - hadoop_dfs_name:/hadoop/dfs/name
-      - hadoop_dfs_data:/hadoop/dfs/data
-    command: /entrypoint.sh hdfs namenode
-    networks:
-      - etl-net
-    restart: unless-stopped
-
-  # ---------------- MinIO Bucket Init ----------------
   minio-init:
     image: minio/mc:latest
-    container_name: minio_init
+    container_name: urban-traffic-minio-init
     depends_on:
       minio:
         condition: service_healthy
     entrypoint: >
       /bin/sh -c "
-      until /usr/bin/mc alias set minio http://minio:9000 minioadmin minioadmin; do echo 'waiting for MinIO...' && sleep 1; done;
-      /usr/bin/mc mb minio/bronze minio/silver minio/gold || true;
-      /usr/bin/mc policy set download minio/bronze minio/silver minio/gold || true;
-      echo '✅ MinIO buckets ready';
+        echo '🔄 Initializing MinIO buckets...' &&
+        until /usr/bin/mc alias set minio http://minio:9002 minioadmin minioadmin; do sleep 1; echo '⏳ Waiting for MinIO...'; done &&
+        /usr/bin/mc mb minio/bronze minio/silver minio/gold || true &&
+        /usr/bin/mc policy set public minio/bronze minio/silver minio/gold || true &&
+        echo '✅ MinIO Buckets ready: bronze, silver, gold (Public Read)'
       "
     networks:
-      - etl-net
+      - data-lake-net
 
-  # ---------------- Python ETL Service ----------------
+  # ==========================================================================
+  # ETL PIPELINE - Bronze(Raw CSV) → Silver(Clean Parquet) → Gold(Analytics)
+  # ==========================================================================
   python-service:
     build:
       context: ./python-service
       dockerfile: Dockerfile
-    container_name: python_service
+    container_name: urban-traffic-etl-pipeline
     volumes:
-      - ./data:/app/data
-      - ./python-service:/app:ro
+      - ./python-service:/app:delegated
+      - ./data:/app/data:delegated  # ✅ Unified Data Lake
     environment:
-      - MINIO_URL=http://minio:9000
+      # MinIO S3
+      - MINIO_URL=http://minio:9002
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
-      - HDFS_NAMENODE=hdfs://namenode:9000
-      - HDFS_WEB_UI=http://namenode:9870
+      # HDFS
+      - HDFS_NAMENODE=namenode:9000
+      - HDFS_WEBHDFS=http://namenode:9870
       - HDFS_USER=hadoop
+      # Data Paths
+      - DATA_BRONZE_PATH=/app/data/bronze
+      - DATA_SILVER_PATH=/app/data/silver
+      - DATA_GOLD_PATH=/app/data/gold
+    networks:
+      - data-lake-net
     depends_on:
       minio:
         condition: service_healthy
-      minio-init:
-        condition: service_completed_successfully
-      hadoop:
-        condition: service_started  # Just needs to be running
-    networks:
-      - etl-net
-    restart: unless-stopped
+      namenode:
+        condition: service_healthy
+    restart: "no"  # Run manually
+    profiles:
+      - pipeline
 
-  # ---------------- Jupyter Notebook ----------------
+  # ==========================================================================
+  # JUPYTERLAB - Data Science & ML Environment (Standard Token)
+  # ==========================================================================
   jupyter:
-    image: jupyter/base-notebook:x86_64-python-3.11.6
-    container_name: jupyter_notebook
+    image: jupyter/datascience-notebook:python-3.11.6
+    container_name: urban-traffic-jupyterlab
     ports:
       - "8888:8888"
     volumes:
-      - ./notebooks:/home/jovyan/work
-      - ./data:/home/jovyan/data
+      - ./notebooks:/home/jovyan/work:cached      #  Live notebook sync
+      - ./data:/home/jovyan/data:delegated        #  Data Lake access
     environment:
-      - JUPYTER_ENABLE_LAB=yes
-      - MINIO_URL=http://minio:9000
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
-    depends_on:
-      minio:
-        condition: service_healthy
-      minio-init:
-        condition: service_completed_successfully
+      JUPYTER_ENABLE_LAB: 'yes'
+      JUPYTER_ALLOW_NO_BROWSER: 'true'
+      GRANT_SUDO: '1'
+      NB_UID: 1000
+      NB_GID: 1000
     networks:
-      - etl-net
+      - data-lake-net
+    depends_on:
+      - minio
+      - namenode
     restart: unless-stopped
 
+  # ==========================================================================
+  # DATA QUALITY MONITOR
+  # ==========================================================================
+  data-monitor:
+    image: jupyter/datascience-notebook:python-3.11.6
+    container_name: urban-traffic-data-monitor
+    volumes:
+      - ./data:/data:ro
+    networks:
+      - data-lake-net
+    entrypoint: >
+      sh -c "
+        echo ' Urban Traffic Data Lake Status Report' &&
+        echo '=======================================' &&
+        echo 'Bronze Layer: $(find /data/bronze -type f | wc -l) files' &&
+        echo 'Silver Layer: $(find /data/silver -type f | wc -l) files' &&
+        echo 'Gold Layer: $(find /data/gold -type f | wc -l) files' &&
+        echo 'Total Size: $(du -sh /data)' &&
+        tail -f /dev/null
+      "
+    profiles:
+      - monitor
+    restart: "no"
+
+# ============================================================================
+# NETWORK & PERSISTENT STORAGE
+# ============================================================================
 networks:
-  etl-net:
+  data-lake-net:
     driver: bridge
+    name: urban-traffic-data-lake-net
+    attachable: true
 
 volumes:
-  hadoop_dfs_name:
+  hadoop_namenode:
+    driver: local
   hadoop_dfs_data:
+    driver: local
+  minio_data:
+    driver: local
