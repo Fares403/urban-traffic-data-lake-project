@@ -1,10 +1,4 @@
-"""
-factor_analysis.py
-
-Perform Factor Analysis on merged data (traffic + weather) from MinIO Silver bucket.
-Save the result locally and to MinIO Gold bucket.
-"""
-
+# scripts/factor_analysis.py - 100% FIXED
 import pandas as pd
 import numpy as np
 from minio import Minio
@@ -15,107 +9,115 @@ import os
 import time
 
 def get_minio_client():
-    """Get MinIO client using Docker Compose environment variables"""
     MINIO_URL = os.getenv("MINIO_URL", "minio:9000")
     MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
     MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "minioadmin")
-    
     endpoint = MINIO_URL.replace("http://", "").replace("https://", "")
-    
-    return Minio(
-        endpoint,
-        access_key=MINIO_ACCESS_KEY,
-        secret_key=MINIO_SECRET_KEY,
-        secure=False
-    )
+    return Minio(endpoint, access_key=MINIO_ACCESS_KEY, secret_key=MINIO_SECRET_KEY, secure=False)
 
 def factor_analysis(client):
-    # ----------------- Configuration -----------------
     SILVER_BUCKET = "silver"
     GOLD_BUCKET = "gold"
-    MERGED_FILE = "merged_data.parquet"  # Fixed filename from merge.py
+    MERGED_FILE = "merged_data.parquet"
     OUTPUT_FILE = "traffic_weather_factors.parquet"
     LOCAL_OUTPUT = "/app/data/gold/traffic_weather_factors.parquet"
     
     try:
-        # Wait for MinIO
-        for _ in range(10):
+        # MinIO connection
+        print(" [1/7] Connecting to MinIO...")
+        for i in range(20):
             try:
                 client.list_buckets()
+                print(f"✔ MinIO ready ({i*3}s)")
                 break
             except:
-                print("[i] Waiting for MinIO...")
-                time.sleep(2)
+                print(f"[i] MinIO wait {i+1}/20...")
+                time.sleep(3)
         else:
-            print("[✖] MinIO not available")
             return False
         
-        # ----------------- Read merged data from Silver -----------------
-        print(f"[i] Loading {MERGED_FILE} from Silver bucket...")
+        # Create gold bucket
+        try:
+            if GOLD_BUCKET not in [b.name for b in client.list_buckets()]:
+                client.make_bucket(GOLD_BUCKET)
+                print(f"✔ Created {GOLD_BUCKET}")
+        except:
+            pass
+        
+        # Load data
+        print(f"\n [2/7] Loading {MERGED_FILE}...")
         obj = client.get_object(SILVER_BUCKET, MERGED_FILE)
         merged_df = pd.read_parquet(BytesIO(obj.read()))
-        print(f"[✔] Loaded merged data from Silver bucket ({len(merged_df)} rows)")
+        print(f"✔ Loaded {len(merged_df):,} rows, {len(merged_df.columns)} cols")
         
-        # ----------------- Select numeric columns -----------------
-        print("[i] Selecting numeric columns for factor analysis...")
+        # Prepare data
+        print("[i] [3/7] Preparing numeric data...")
         numeric_cols = merged_df.select_dtypes(include=[np.number]).columns.tolist()
-        print(f"[i] Numeric columns: {numeric_cols}")
-        
-        if len(numeric_cols) < 2:
-            print("[✖] Not enough numeric columns for factor analysis")
-            return False
-        
         numeric_df = merged_df[numeric_cols].fillna(merged_df[numeric_cols].median())
+        numeric_df = numeric_df.loc[:, numeric_df.std() > 0.01]
         
-        # ----------------- Factor Analysis -----------------
-        n_factors = min(5, len(numeric_cols) - 1)  # Max factors = variables - 1
-        print(f"[i] Performing Factor Analysis with {n_factors} factors...")
+        print(f"✔ Using {len(numeric_df.columns)} variables")
+        
+        # Factor Analysis
+        n_factors = min(5, len(numeric_df.columns) - 1)
+        print(f"\n [4/7] Factor Analysis (n_factors={n_factors})...")
         
         fa = FactorAnalysis(n_components=n_factors, random_state=42)
         fa_result = fa.fit_transform(numeric_df)
         
-        # Convert to DataFrame
+        #  FIXED: Factor scores
         fa_df = pd.DataFrame(
             fa_result, 
-            columns=[f"Factor_{i+1}" for i in range(n_factors)]
+            columns=[f"Factor_{i+1}_score" for i in range(n_factors)]
         )
         
-        # Combine with original data
+        #  FIXED: Loadings (NO nlargest error)
+        loadings = pd.DataFrame(
+            fa.components_.T,
+            index=numeric_df.columns,
+            columns=[f"Factor_{i+1}_loading" for i in range(n_factors)]
+        ).round(4)
+        
+        print(f"✔ Extracted {n_factors} factors")
+        print("\n Top Loadings per Factor:")
+        for factor_col in loadings.columns:
+            top_loading = loadings[factor_col].abs().nlargest(2)  # ✅ FIXED: per column
+            print(f"  {factor_col}: {top_loading.to_dict()}")
+        
+        # Final dataset
         final_df = pd.concat([
-            merged_df.reset_index(drop=True), 
-            fa_df
+            merged_df.reset_index(drop=True),
+            fa_df.reset_index(drop=True)
         ], axis=1)
         
-        print(f"[✔] Factor analysis completed: {n_factors} factors extracted")
+        # Save
+        print("\n [5/7] Saving locally...")
+        os.makedirs("/app/data/gold", exist_ok=True)
+        final_df.to_parquet(LOCAL_OUTPUT, index=False)
+        loadings.to_parquet("/app/data/gold/factor_loadings.parquet")
+        print(f"✔ Saved: {LOCAL_OUTPUT}")
         
-        # ----------------- Save locally -----------------
-        gold_path = os.path.dirname(LOCAL_OUTPUT)
-        os.makedirs(gold_path, exist_ok=True)
-        final_df.to_parquet(LOCAL_OUTPUT, index=False, engine='fastparquet')
-        print(f"[✔] Factor analysis result saved locally → {LOCAL_OUTPUT}")
-        
-        # ----------------- Upload to MinIO Gold -----------------
+        # Upload
+        print("\n [6/7] Uploading...")
         buffer = BytesIO()
-        final_df.to_parquet(buffer, index=False, engine='fastparquet')
+        final_df.to_parquet(buffer, index=False)
         buffer.seek(0)
-        client.put_object(
-            GOLD_BUCKET,
-            OUTPUT_FILE,
-            buffer,
-            length=buffer.getbuffer().nbytes
-        )
-        print(f"[✔] Factor analysis result uploaded → MinIO {GOLD_BUCKET}/{OUTPUT_FILE}")
+        client.put_object(GOLD_BUCKET, OUTPUT_FILE, buffer, buffer.getbuffer().nbytes)
+        print(f"✔ Uploaded: gold/{OUTPUT_FILE}")
+        
+        print("\n FACTOR ANALYSIS COMPLETE!")
+        print(f" {n_factors} factors ready for Jupyter!")
         
         return True
         
-    except S3Error as e:
-        print(f"[✖] MinIO error: {e}")
-        return False
     except Exception as e:
-        print(f"[✖] Unexpected error: {e}")
+        print(f"[✖] Error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return False
 
 if __name__ == "__main__":
+    print(" Urban Traffic Factor Analysis")
     client = get_minio_client()
     success = factor_analysis(client)
     exit(0 if success else 1)
