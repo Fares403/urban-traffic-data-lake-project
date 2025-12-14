@@ -182,31 +182,6 @@ services:
           --ServerApp.root_dir=/home/jovyan/work
       "
     restart: unless-stopped
-
-  # ==========================================================================
-  # DATA QUALITY MONITOR
-  # ==========================================================================
-  data-monitor:
-    image: jupyter/datascience-notebook:python-3.11.6
-    container_name: urban-traffic-data-monitor
-    volumes:
-      - ./data:/data:ro
-    networks:
-      - data-lake-net
-    entrypoint: >
-      sh -c "
-        echo 'Urban Traffic Data Lake Status Report' &&
-        echo '=======================================' &&
-        echo 'Bronze Layer: $(find /data/bronze -type f | wc -l) files' &&
-        echo 'Silver Layer: $(find /data/silver -type f | wc -l) files' &&
-        echo 'Gold Layer: $(find /data/gold -type f | wc -l) files' &&
-        echo 'Total Size: $(du -sh /data)' &&
-        tail -f /dev/null
-      "
-    profiles:
-      - monitor
-    restart: "no"
-
 # ============================================================================
 # NETWORK & PERSISTENT STORAGE
 # ============================================================================
